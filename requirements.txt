@@ -1,0 +1,23 @@
+# LFM2 Terminal Agent Training
+# Vessl AI H100 SXM x1 환경
+
+# Core
+unsloth
+unsloth_zoo
+trl>=0.27.0
+transformers>=4.48.0
+datasets>=3.0.0
+accelerate>=1.0.0
+peft>=0.14.0
+
+# Inference (RLVR rollout generation)
+vllm>=0.12.0
+
+# Training
+torch>=2.4.0
+deepspeed>=0.16.0
+bitsandbytes>=0.45.0
+
+# Utilities
+safetensors
+wandb
