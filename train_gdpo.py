@@ -409,6 +409,22 @@ def main(args):
     print(f"  평가:     python evaluate.py --model_path {lora_path}")
     print(f"  변환:     python export_model.py --model_path {merged_path if args.merge else lora_path}")
 
+    # HuggingFace Hub 업로드
+    if args.push_to_hub:
+        upload_path = merged_path if args.merge else lora_path
+        print(f"\n  📤 HuggingFace Hub 업로드: {args.hub_repo}")
+        from huggingface_hub import HfApi
+
+        api = HfApi()
+        api.upload_folder(
+            folder_path=upload_path,
+            repo_id=args.hub_repo,
+            repo_type="model",
+            commit_message="GDPO RLVR: Terminal agent with 4 reward functions",
+            token=os.environ.get("HF_TOKEN"),
+        )
+        print(f"  ✅ 업로드 완료: https://huggingface.co/{args.hub_repo}")
+
     del model, trainer
     gc.collect()
     torch.cuda.empty_cache()
@@ -431,5 +447,9 @@ if __name__ == "__main__":
     parser.add_argument("--kl_coef", type=float, default=0.05)
     parser.add_argument("--wandb", action="store_true", default=False)
     parser.add_argument("--merge", action="store_true", default=False)
+    parser.add_argument("--push_to_hub", action="store_true", default=False,
+                        help="학습 후 HuggingFace Hub에 업로드")
+    parser.add_argument("--hub_repo", type=str, default="gyunggyung/LFM2-8B-Terminal-GDPO",
+                        help="HuggingFace 리포지토리 ID")
     args = parser.parse_args()
     main(args)

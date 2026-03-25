@@ -15,35 +15,64 @@ NVIDIA의 [Nemotron-Terminal-Corpus](https://huggingface.co/datasets/nvidia/Nemo
 
 ## 🚀 실행 방법
 
-### Vessl AI H100에서 (권장)
+### 1. Vessl AI 워크스페이스 생성
+
+1. [cloud.vessl.ai](https://cloud.vessl.ai) 접속
+2. **H100 SXM x1** 선택 ($2.39/hr)
+3. Container image: `Torch 2.9.1 (CUDA 13.0.1, Python 3.11)`
+4. **Create** 클릭
+
+### 2. SSH 접속 후 환경 설정
 
 ```bash
-# 1. 워크스페이스 생성
-#    → H100 SXM x1 선택 ($2.39/hr)
-#    → Managed image: Torch 2.9.1 (CUDA 13.0.1, Python 3.11)
-#    → Persistent volume 추가!
-
-# 2. SSH 접속 후
 cd /root
 git clone https://github.com/gyunggyung/Liquid-CLI.git
 cd Liquid-CLI
 bash setup_vessl.sh
-
-# 3. 학습 (~6-9시간, ~$15-22)
-tmux new -s train
-python prepare_data.py                    # 데이터 필터링 (~10분)
-python train_sft.py --wandb               # Full FT SFT (~3-5시간)
-python evaluate.py --model_path /root/outputs/sft/final
-python train_gdpo.py --merge --wandb      # GDPO RLVR (~2-4시간)
-python export_model.py --model_path /root/outputs/gdpo/merged  # GGUF 변환
 ```
 
-### 로컬 CPU에서 추론
+### 3. HuggingFace 토큰 설정 (모델 업로드용)
+
+```bash
+# https://huggingface.co/settings/tokens 에서 Write 토큰 발급
+export HF_TOKEN="hf_your_token_here"
+huggingface-cli login --token $HF_TOKEN
+```
+
+### 4. 학습 실행 (~6-9시간, ~$15-22)
+
+```bash
+tmux new -s train
+
+# Phase 0: 데이터 필터링 (~10분)
+python prepare_data.py
+
+# Phase 1: Full FT SFT (~3-5시간)
+python train_sft.py --wandb --push_to_hub
+
+# 중간 평가
+python evaluate.py --model_path /root/outputs/sft/final
+
+# Phase 2: GDPO RLVR (~2-4시간)
+python train_gdpo.py --merge --wandb --push_to_hub
+
+# Phase 3: GGUF 변환 + 업로드
+python export_model.py --model_path /root/outputs/gdpo/merged --push_to_hub
+```
+
+### 5. 로컬 CPU에서 추론
 
 ```bash
 ./llama-cli -m LFM2-Terminal-Q8_0.gguf \
   -p "You are a terminal agent..." \
   --temp 0.3 -n 512 -t 8
+```
+
+### tmux 팁
+
+```bash
+Ctrl+B, D        # tmux에서 나가기 (학습은 계속됨)
+tmux a -t train   # 다시 들어가기
 ```
 
 ## 📁 파일 구조
@@ -79,24 +108,25 @@ Train on NVIDIA's [Nemotron-Terminal-Corpus](https://huggingface.co/datasets/nvi
 
 ## 🚀 Quick Start
 
-### On Vessl AI H100 (Recommended)
-
 ```bash
-# 1. Create workspace: H100 SXM x1 ($2.39/hr)
+# 1. Vessl AI: H100 SXM x1 ($2.39/hr)
 #    Image: Torch 2.9.1 (CUDA 13.0.1, Python 3.11)
-#    Add persistent volume!
 
-# 2. SSH in
+# 2. SSH in & setup
 cd /root && git clone https://github.com/gyunggyung/Liquid-CLI.git
 cd Liquid-CLI && bash setup_vessl.sh
 
-# 3. Train (~6-9hrs, ~$15-22)
+# 3. HuggingFace token (for model upload)
+export HF_TOKEN="hf_your_token_here"
+huggingface-cli login --token $HF_TOKEN
+
+# 4. Train (~6-9hrs, ~$15-22)
 tmux new -s train
 python prepare_data.py
-python train_sft.py --wandb
+python train_sft.py --wandb --push_to_hub
 python evaluate.py --model_path /root/outputs/sft/final
-python train_gdpo.py --merge --wandb
-python export_model.py --model_path /root/outputs/gdpo/merged
+python train_gdpo.py --merge --wandb --push_to_hub
+python export_model.py --model_path /root/outputs/gdpo/merged --push_to_hub
 ```
 
 ## 📄 License

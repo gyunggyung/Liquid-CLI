@@ -21,10 +21,20 @@ pip install --upgrade pip
 pip install --upgrade --force-reinstall --no-cache-dir --no-deps unsloth unsloth_zoo
 pip install -r requirements.txt
 
-echo "═══ [4/5] wandb 로그인 (선택) ═══"
+echo "═══ [4/6] HuggingFace 토큰 설정 ═══"
+if [ -n "$HF_TOKEN" ]; then
+    huggingface-cli login --token $HF_TOKEN
+    echo "✅ HF 토큰 설정 완료"
+else
+    echo "⚠️  HF_TOKEN이 설정되지 않았습니다."
+    echo "  모델 업로드를 원하면: export HF_TOKEN=hf_your_token_here"
+    echo "  토큰 발급: https://huggingface.co/settings/tokens"
+fi
+
+echo "═══ [5/6] wandb 로그인 (선택) ═══"
 echo "wandb login 필요시: wandb login YOUR_API_KEY"
 
-echo "═══ [5/5] GPU 정보 확인 ═══"
+echo "═══ [6/6] GPU 정보 확인 ═══"
 nvidia-smi
 python -c "import torch; print(f'PyTorch: {torch.__version__}, CUDA: {torch.cuda.is_available()}, Device: {torch.cuda.get_device_name(0)}')"
 python -c "import unsloth; print(f'Unsloth OK')"
@@ -32,9 +42,13 @@ python -c "import trl; print(f'TRL: {trl.__version__}')"
 
 echo ""
 echo "═══ 설정 완료! ═══"
+echo ""
+echo "HF 토큰 설정 (모델 업로드용):"
+echo "  export HF_TOKEN=hf_your_token_here"
+echo ""
 echo "다음 단계:"
 echo "  1. 데이터 준비: python prepare_data.py"
-echo "  2. SFT 학습:    python train_sft.py"
-echo "  3. 평가:        python evaluate.py --model_path outputs/sft"
-echo "  4. GDPO RLVR:   python train_gdpo.py"
-echo "  5. 모델 변환:   python export_model.py"
+echo "  2. SFT 학습:    python train_sft.py --wandb --push_to_hub"
+echo "  3. 평가:        python evaluate.py --model_path /root/outputs/sft/final"
+echo "  4. GDPO RLVR:   python train_gdpo.py --merge --wandb --push_to_hub"
+echo "  5. 모델 변환:   python export_model.py --model_path /root/outputs/gdpo/merged --push_to_hub"

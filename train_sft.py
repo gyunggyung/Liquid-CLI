@@ -228,6 +228,22 @@ def main(args):
     tokenizer.save_pretrained(save_path)
 
     print(f"  ✅ 모델 저장 완료: {save_path}")
+
+    # HuggingFace Hub 업로드
+    if args.push_to_hub:
+        print(f"\n  📤 HuggingFace Hub 업로드: {args.hub_repo}")
+        from huggingface_hub import HfApi
+
+        api = HfApi()
+        api.upload_folder(
+            folder_path=save_path,
+            repo_id=args.hub_repo,
+            repo_type="model",
+            commit_message="SFT: Full FT on Nemotron-Terminal-Corpus (non-coding)",
+            token=os.environ.get("HF_TOKEN"),
+        )
+        print(f"  ✅ 업로드 완료: https://huggingface.co/{args.hub_repo}")
+
     print(f"\n다음 단계:")
     print(f"  평가:     python evaluate.py --model_path {save_path}")
     print(f"  GDPO RL:  python train_gdpo.py --model_path {save_path}")
@@ -254,5 +270,9 @@ if __name__ == "__main__":
     parser.add_argument("--wandb", action="store_true", default=False)
     parser.add_argument("--resume", action="store_true", default=False)
     parser.add_argument("--deepspeed_config", type=str, default="ds_config.json")
+    parser.add_argument("--push_to_hub", action="store_true", default=False,
+                        help="학습 후 HuggingFace Hub에 업로드")
+    parser.add_argument("--hub_repo", type=str, default="gyunggyung/LFM2-8B-Terminal-SFT",
+                        help="HuggingFace 리포지토리 ID")
     args = parser.parse_args()
     main(args)
