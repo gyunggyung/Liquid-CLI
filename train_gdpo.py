@@ -19,6 +19,11 @@ from datasets import load_from_disk
 # vLLM standby 모드 활성화 (메모리 공유)
 os.environ["UNSLOTH_VLLM_STANDBY"] = "1"
 
+# Unsloth MoE 최적화 백엔드 (H100: grouped_mm, A100: unsloth_triton)
+# H100 SXM에서는 grouped_mm이 가장 빠름 (torch._grouped_mm 활용)
+if "UNSLOTH_MOE_BACKEND" not in os.environ:
+    os.environ["UNSLOTH_MOE_BACKEND"] = "grouped_mm"
+
 
 # ═══════════════════════════════════════════════════
 # 리워드 함수 (GDPO용 — 각각 독립 정규화됨)
@@ -331,7 +336,8 @@ def main(args):
     )
 
     training_args = GRPOConfig(
-        # vLLM 추론 (vllm_sampling_params 설정 시 자동 활성화)
+        # vLLM 추론 활성화
+        use_vllm=True,
         vllm_sampling_params=vllm_params,
         temperature=1.0,
         # 학습률
@@ -353,9 +359,9 @@ def main(args):
         logging_steps=1,
         # KL 계수 (SFT 모델을 reference로)
         kl_coef=args.kl_coef,
-        # GDPO 활성화 (TRL v0.27.0+ PR #4785)
-        # 각 reward를 독립적으로 group-level 정규화 후 합산
-        apply_gdpo=True,
+        # GDPO: 각 reward를 독립적으로 group-level 정규화 후 합산
+        # TRL v0.27.0+ loss_type 파라미터로 활성화
+        loss_type="gdpo",
         # HuggingFace Hub (중간 체크포인트 자동 업로드)
         push_to_hub=args.push_to_hub,
         hub_model_id=args.hub_repo if args.push_to_hub else None,
