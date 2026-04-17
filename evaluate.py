@@ -176,7 +176,7 @@ def main(args):
         model, tokenizer = FastLanguageModel.from_pretrained(
             model_name=args.model_path,
             max_seq_length=args.max_seq_length,
-            load_in_fp8=True,
+            load_in_4bit=True,
             trust_remote_code=True,
         )
         FastLanguageModel.for_inference(model)
