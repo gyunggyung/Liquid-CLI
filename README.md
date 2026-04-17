@@ -87,7 +87,7 @@ tmux a -t train   # 다시 들어가기
 | `export_model.py` | GGUF 변환 + Hub 업로드 |
 | `ds_config.json` | DeepSpeed ZeRO-2 설정 |
 
-자세한 내용은 [LFM2_Terminal_RLVR_Training_Guide.md](LFM2_Terminal_RLVR_Training_Guide.md)를 참고하세요.
+자세한 내용은 [LFM2_Terminal_RLVR_Training_Guide.md](docs/LFM2_Terminal_RLVR_Training_Guide.md)를 참고하세요.
 
 
 ## 📊 성능 평가 (Evaluation - Interim)
