@@ -140,25 +140,6 @@ def main(args):
         desc="Formatting",
     )
 
-    # 길이 필터링
-    dataset = dataset.map(
-        lambda x: {"_len": len(tokenizer.encode(x["text"]))},
-        num_proc=4,
-        desc="Tokenizing lengths",
-    )
-    max_len = int(
-        min(
-            args.max_seq_length,
-            max(dataset["_len"]) if max(dataset["_len"]) < args.max_seq_length else args.max_seq_length,
-        )
-    )
-    original_len = len(dataset)
-    dataset = dataset.filter(lambda x: x["_len"] <= args.max_seq_length)
-    print(
-        f"  길이 필터링: {original_len} → {len(dataset)} "
-        f"(제거: {original_len - len(dataset)})"
-    )
-
     # 샘플 확인
     print(f"\n  첫 번째 샘플 (처음 300자):")
     print(f"  {dataset[0]['text'][:300]}...")
@@ -167,35 +148,31 @@ def main(args):
     print("\n[3/4] 학습 시작...")
 
     training_args = SFTConfig(
-        # 데이터
-        dataset_text_field="text",
-        max_seq_length=args.max_seq_length,
-        packing=True,  # 짧은 시퀀스를 묶어서 효율 향상
-        # 배치
-        per_device_train_batch_size=args.batch_size,
-        gradient_accumulation_steps=args.grad_accum,
-        # 최적화
+        max_length=args.max_seq_length,
+        dataset_text_field=None,
+        packing=False,
+        dataset_kwargs={
+            "add_special_tokens": False,
+            "append_concat_token": False,
+        },
+        # 하이퍼파라미터
         learning_rate=args.learning_rate,
-        weight_decay=1e-4,
-        warmup_ratio=0.1,
-        lr_scheduler_type="cosine",
-        optim="adamw_torch",
-        # 스케줄
         num_train_epochs=args.num_epochs,
         max_steps=args.max_steps if args.max_steps > 0 else -1,
-        logging_steps=10,
-        save_steps=500,
-        save_total_limit=3,
-        # 메모리
+        per_device_train_batch_size=args.batch_size,
+        gradient_accumulation_steps=args.grad_accum,
         gradient_checkpointing=True,
         gradient_checkpointing_kwargs={"use_reentrant": False},
         bf16=True,
-        # Deepspeed (OOM 방지)
-        deepspeed=args.deepspeed_config if args.deepspeed_config else None,
-        # HuggingFace Hub (중간 체크포인트 자동 업로드)
+        # 로깅 및 저장
+        logging_steps=10,
+        save_steps=500,
+        # Hub 업로드 설정 (SFT 학습 중 자동 백업)
         push_to_hub=args.push_to_hub,
         hub_model_id=args.hub_repo if args.push_to_hub else None,
-        hub_strategy="every_save",  # save_steps마다 자동 업로드
+        hub_strategy="every_save",
+        # DeepSpeed
+        deepspeed=args.deepspeed_config if args.deepspeed_config else None,
         # 출력
         report_to="wandb" if args.wandb else "none",
         output_dir=args.output_dir,
@@ -208,6 +185,7 @@ def main(args):
         tokenizer=tokenizer,
         train_dataset=dataset,
         args=training_args,
+        max_seq_length=args.max_seq_length,
     )
 
     # 학습 재개
@@ -258,8 +236,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("--output_dir", type=str, default="/root/outputs/sft")
     parser.add_argument("--max_seq_length", type=int, default=8192)
-    parser.add_argument("--batch_size", type=int, default=1)
-    parser.add_argument("--grad_accum", type=int, default=8)
+    parser.add_argument("--batch_size", type=int, default=2)
+    parser.add_argument("--grad_accum", type=int, default=4)
     parser.add_argument("--learning_rate", type=float, default=2e-5)
     parser.add_argument("--num_epochs", type=int, default=2)
     parser.add_argument("--max_steps", type=int, default=-1)

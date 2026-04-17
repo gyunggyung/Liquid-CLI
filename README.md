@@ -135,7 +135,15 @@ MIT
 
 ## 🔗 References
 
-- [Nemotron-Terminal Paper](https://arxiv.org/html/2602.21193v1)
-- [LFM2-8B-A1B](https://huggingface.co/LiquidAI/LFM2-8B-A1B)
-- [TRL v0.27.0 (GDPO)](https://github.com/huggingface/trl/releases/tag/v0.27.0)
-- [GDPO Paper](https://arxiv.org/html/2601.05242v1)
+- **Models & Data**
+  - [Official LiquidAI LFM2-8B-A1B](https://huggingface.co/LiquidAI/LFM2-8B-A1B)
+  - [Unsloth Optimized LFM2-8B-A1B](https://huggingface.co/unsloth/LFM2-8B-A1B)
+  - [NVIDIA Nemotron-Terminal-Corpus Dataset](https://huggingface.co/datasets/nvidia/Nemotron-Terminal-Corpus)
+  - [Nemotron-Terminal Technical Report](https://arxiv.org/html/2602.21193v1)
+
+- **Training Technologies**
+  - [TRL v0.27.0 (GDPO/GRPO Implementation)](https://github.com/huggingface/trl/releases/tag/v0.27.0)
+  - [GDPO (Generalized Differential Policy Optimization) Paper](https://arxiv.org/html/2601.05242v1)
+  - [Unsloth Faster MoE kernels Guide](https://unsloth.ai/docs/basics/faster-moe)
+  - [Unsloth FP8 RL & GRPO/GDPO Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning)
+
