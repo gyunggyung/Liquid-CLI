@@ -356,6 +356,10 @@ def main(args):
         # GDPO 활성화 (TRL v0.27.0+ PR #4785)
         # 각 reward를 독립적으로 group-level 정규화 후 합산
         apply_gdpo=True,
+        # HuggingFace Hub (중간 체크포인트 자동 업로드)
+        push_to_hub=args.push_to_hub,
+        hub_model_id=args.hub_repo if args.push_to_hub else None,
+        hub_strategy="every_save",  # save_steps마다 자동 업로드
         # 출력
         report_to="wandb" if args.wandb else "none",
         output_dir=args.output_dir,
@@ -409,10 +413,10 @@ def main(args):
     print(f"  평가:     python evaluate.py --model_path {lora_path}")
     print(f"  변환:     python export_model.py --model_path {merged_path if args.merge else lora_path}")
 
-    # HuggingFace Hub 업로드
+    # HuggingFace Hub 최종 업로드 (중간 체크포인트는 hub_strategy="every_save"로 자동 업로드됨)
     if args.push_to_hub:
         upload_path = merged_path if args.merge else lora_path
-        print(f"\n  📤 HuggingFace Hub 업로드: {args.hub_repo}")
+        print(f"\n  📤 HuggingFace Hub 최종 모델 업로드: {args.hub_repo}")
         from huggingface_hub import HfApi
 
         api = HfApi()
@@ -420,7 +424,7 @@ def main(args):
             folder_path=upload_path,
             repo_id=args.hub_repo,
             repo_type="model",
-            commit_message="GDPO RLVR: Terminal agent with 4 reward functions",
+            commit_message="GDPO RLVR: Terminal agent with 4 reward functions — final",
             token=os.environ.get("HF_TOKEN"),
         )
         print(f"  ✅ 업로드 완료: https://huggingface.co/{args.hub_repo}")
@@ -449,7 +453,7 @@ if __name__ == "__main__":
     parser.add_argument("--merge", action="store_true", default=False)
     parser.add_argument("--push_to_hub", action="store_true", default=False,
                         help="학습 후 HuggingFace Hub에 업로드")
-    parser.add_argument("--hub_repo", type=str, default="gyunggyung/LFM2-8B-Terminal-GDPO",
+    parser.add_argument("--hub_repo", type=str, default="gyung/LFM2-8B-Terminal-GDPO",
                         help="HuggingFace 리포지토리 ID")
     args = parser.parse_args()
     main(args)

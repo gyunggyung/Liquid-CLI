@@ -191,6 +191,10 @@ def main(args):
         bf16=True,
         # Deepspeed (OOM 방지)
         deepspeed=args.deepspeed_config if args.deepspeed_config else None,
+        # HuggingFace Hub (중간 체크포인트 자동 업로드)
+        push_to_hub=args.push_to_hub,
+        hub_model_id=args.hub_repo if args.push_to_hub else None,
+        hub_strategy="every_save",  # save_steps마다 자동 업로드
         # 출력
         report_to="wandb" if args.wandb else "none",
         output_dir=args.output_dir,
@@ -229,19 +233,10 @@ def main(args):
 
     print(f"  ✅ 모델 저장 완료: {save_path}")
 
-    # HuggingFace Hub 업로드
+    # HuggingFace Hub 최종 업로드 (중간 체크포인트는 hub_strategy="every_save"로 자동 업로드됨)
     if args.push_to_hub:
-        print(f"\n  📤 HuggingFace Hub 업로드: {args.hub_repo}")
-        from huggingface_hub import HfApi
-
-        api = HfApi()
-        api.upload_folder(
-            folder_path=save_path,
-            repo_id=args.hub_repo,
-            repo_type="model",
-            commit_message="SFT: Full FT on Nemotron-Terminal-Corpus (non-coding)",
-            token=os.environ.get("HF_TOKEN"),
-        )
+        print(f"\n  📤 HuggingFace Hub 최종 모델 업로드: {args.hub_repo}")
+        trainer.push_to_hub(commit_message="SFT: Full FT on Nemotron-Terminal-Corpus (non-coding) — final")
         print(f"  ✅ 업로드 완료: https://huggingface.co/{args.hub_repo}")
 
     print(f"\n다음 단계:")
@@ -272,7 +267,7 @@ if __name__ == "__main__":
     parser.add_argument("--deepspeed_config", type=str, default="ds_config.json")
     parser.add_argument("--push_to_hub", action="store_true", default=False,
                         help="학습 후 HuggingFace Hub에 업로드")
-    parser.add_argument("--hub_repo", type=str, default="gyunggyung/LFM2-8B-Terminal-SFT",
+    parser.add_argument("--hub_repo", type=str, default="gyung/LFM2-8B-Terminal-SFT",
                         help="HuggingFace 리포지토리 ID")
     args = parser.parse_args()
     main(args)

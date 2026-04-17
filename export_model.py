@@ -78,6 +78,6 @@ if __name__ == "__main__":
     )
     parser.add_argument("--max_seq_length", type=int, default=8192)
     parser.add_argument("--push_to_hub", action="store_true", default=False)
-    parser.add_argument("--hub_repo", type=str, default="gyunggyung/LFM2-8B-Terminal")
+    parser.add_argument("--hub_repo", type=str, default="gyung/LFM2-8B-Terminal")
     args = parser.parse_args()
     main(args)
