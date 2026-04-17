@@ -150,6 +150,7 @@ def main(args):
     training_args = SFTConfig(
         max_length=args.max_seq_length,
         dataset_text_field="text",
+        dataset_num_proc=16,             # CPU 멀티 코어 동원 (가속화)
         packing=False,
         dataset_kwargs={
             "add_special_tokens": False,
