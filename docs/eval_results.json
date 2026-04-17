@@ -1,0 +1,184 @@
+{
+  "model_path": "/root/outputs/sft_unsloth/checkpoint-450",
+  "total_samples": 10,
+  "avg_score": 3.5,
+  "format_compliance": 0.8,
+  "command_relevance": 0.7,
+  "category_scores": {
+    "file_operations": 2.25,
+    "data_processing": 4.0,
+    "data_querying": 4.5,
+    "dependency_management": 4.5,
+    "security": 4.5,
+    "networking": 4.5,
+    "system_admin": 0.0
+  },
+  "detailed_results": [
+    {
+      "format_ok": true,
+      "json_valid": true,
+      "has_analysis": true,
+      "has_plan": true,
+      "has_commands": true,
+      "commands_relevant": true,
+      "command_names": [
+        "ls",
+        "find",
+        "find"
+      ],
+      "score": 4.5,
+      "id": "file_ops_1",
+      "category": "file_operations",
+      "response_preview": "<think>\nWe need to list files larger than 100MB in the /home directory, sorted by size in descending order.\n First, we should check the current directory and see what's available.\n We can use the `fin"
+    },
+    {
+      "format_ok": false,
+      "json_valid": false,
+      "has_analysis": false,
+      "has_plan": false,
+      "has_commands": false,
+      "commands_relevant": false,
+      "command_names": [],
+      "score": 0.0,
+      "id": "file_ops_2",
+      "category": "file_operations",
+      "response_preview": "<think>\nWe need to find all .log files in /var/log that were modified in the last 7 days, then count the total number of lines across all those files.\n Steps:\n 1. List files in /var/log with .log exte"
+    },
+    {
+      "format_ok": true,
+      "json_valid": true,
+      "has_analysis": true,
+      "has_plan": true,
+      "has_commands": true,
+      "commands_relevant": false,
+      "command_names": [
+        "ls",
+        "head",
+        "wc"
+      ],
+      "score": 3.5,
+      "id": "data_proc_1",
+      "category": "data_processing",
+      "response_preview": "<think>\nWe need to extract the 3rd column from a CSV file, sort the values, remove duplicates, and save to /data/output.txt.\nFirst, let's check if the input file exists and examine its contents.\nThen "
+    },
+    {
+      "format_ok": true,
+      "json_valid": true,
+      "has_analysis": true,
+      "has_plan": true,
+      "has_commands": true,
+      "commands_relevant": true,
+      "command_names": [
+        "ls",
+        "find",
+        "mkdir",
+        "for"
+      ],
+      "score": 4.5,
+      "id": "data_proc_2",
+      "category": "data_processing",
+      "response_preview": "<think>\nWe need to replace all occurrences of 'ERROR' with 'WARNING' in all .txt files under /logs/ directory recursively.\n First, let's check the current directory and see what's available.\n We'll us"
+    },
+    {
+      "format_ok": true,
+      "json_valid": true,
+      "has_analysis": true,
+      "has_plan": true,
+      "has_commands": true,
+      "commands_relevant": true,
+      "command_names": [
+        "which",
+        "cat"
+      ],
+      "score": 4.5,
+      "id": "data_query_1",
+      "category": "data_querying",
+      "response_preview": "<think>\nWe need to extract users with age > 30 and display their names from the JSON file at /data/users.json.\nFirst, let's check if the file exists and examine its content.\nThen we can write a script"
+    },
+    {
+      "format_ok": true,
+      "json_valid": true,
+      "has_analysis": true,
+      "has_plan": true,
+      "has_commands": true,
+      "commands_relevant": true,
+      "command_names": [
+        "pip"
+      ],
+      "score": 4.5,
+      "id": "dep_mgmt_1",
+      "category": "dependency_management",
+      "response_preview": "<think>\nWe need to check outdated Python packages and list them, then upgrade pip.\n First, let's check the current Python environment and installed packages.\n We'll use pip list to see what's installe"
+    },
+    {
+      "format_ok": true,
+      "json_valid": true,
+      "has_analysis": true,
+      "has_plan": true,
+      "has_commands": true,
+      "commands_relevant": true,
+      "command_names": [
+        "apt",
+        "apt",
+        "systemctl",
+        "systemctl",
+        "netstat"
+      ],
+      "score": 4.5,
+      "id": "dep_mgmt_2",
+      "category": "dependency_management",
+      "response_preview": "<think>\nWe are in a fresh terminal. We need to install nginx via apt, enable it as a systemd service, and verify it's running.\n Let's start by checking the current package list and then install nginx."
+    },
+    {
+      "format_ok": true,
+      "json_valid": true,
+      "has_analysis": true,
+      "has_plan": true,
+      "has_commands": true,
+      "commands_relevant": true,
+      "command_names": [
+        "which",
+        "which",
+        "iptables",
+        "ufw"
+      ],
+      "score": 4.5,
+      "id": "security_1",
+      "category": "security",
+      "response_preview": "<think>\nWe are in a fresh terminal. We need to check the current firewall rules and then add a rule to allow incoming traffic on port 443.\n First, let's see what firewall is installed and its current "
+    },
+    {
+      "format_ok": true,
+      "json_valid": true,
+      "has_analysis": true,
+      "has_plan": true,
+      "has_commands": true,
+      "commands_relevant": true,
+      "command_names": [
+        "pwd",
+        "mkdir",
+        "cd",
+        "wget",
+        "cd",
+        "sha256sum"
+      ],
+      "score": 4.5,
+      "id": "network_1",
+      "category": "networking",
+      "response_preview": "<think>\nWe are in a fresh terminal. We need to download the file from the given URL, verify its checksum, and then extract it to /opt/data/. First, we should check if the directory /opt/data exists; i"
+    },
+    {
+      "format_ok": false,
+      "json_valid": false,
+      "has_analysis": false,
+      "has_plan": false,
+      "has_commands": false,
+      "commands_relevant": false,
+      "command_names": [],
+      "score": 0.0,
+      "id": "sysadmin_1",
+      "category": "system_admin",
+      "response_preview": "<think>\nWe need to check disk usage of all mounted filesystems, identify the partition with the most usage, and then find the top 10 largest files on that partition.\n First, let's list mounted filesys"
+    }
+  ]
+}
