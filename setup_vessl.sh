@@ -18,6 +18,8 @@ cd Liquid-CLI
 
 echo "═══ [3/5] Python 패키지 설치 ═══"
 pip install --upgrade pip
+# LFM2 모델 인식을 위한 특정 transformers 버전(lfm2_moe 지원) 설치 필수
+pip install git+https://github.com/huggingface/transformers.git@0c9a72e4576fe4c84077f066e585129c97bfd4e6
 pip install --upgrade --force-reinstall --no-cache-dir --no-deps unsloth unsloth_zoo
 pip install -r requirements.txt
 

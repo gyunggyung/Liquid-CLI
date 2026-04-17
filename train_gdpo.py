@@ -294,6 +294,7 @@ def main(args):
         load_in_fp8=True,
         fast_inference=True,  # vLLM 활성화 (RLVR rollout 생성)
         max_lora_rank=args.lora_rank,
+        trust_remote_code=True,
     )
 
     # RLVR에서는 LoRA 적용

@@ -177,15 +177,16 @@ def main(args):
             model_name=args.model_path,
             max_seq_length=args.max_seq_length,
             load_in_fp8=True,
+            trust_remote_code=True,
         )
         FastLanguageModel.for_inference(model)
     else:
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
         model = AutoModelForCausalLM.from_pretrained(
-            args.model_path, dtype="bfloat16", device_map="auto"
+            args.model_path, dtype="bfloat16", device_map="auto", trust_remote_code=True
         )
-        tokenizer = AutoTokenizer.from_pretrained(args.model_path)
+        tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)
 
     model.eval()
 

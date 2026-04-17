@@ -25,6 +25,7 @@ def main(args):
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=args.model_path,
         max_seq_length=args.max_seq_length,
+        trust_remote_code=True,
     )
 
     # GGUF 변환

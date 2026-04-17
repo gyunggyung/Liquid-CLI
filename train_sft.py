@@ -111,10 +111,11 @@ def main(args):
     model = AutoModelForCausalLM.from_pretrained(
         args.model_name,
         dtype="bfloat16",  # LFM2 공식 model card 방식
+        trust_remote_code=True,
         # device_map은 DeepSpeed 사용 시 생략해야 함
         device_map="auto" if not args.deepspeed_config else None,
     )
-    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name, trust_remote_code=True)
 
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -253,7 +254,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="LFM2-8B-A1B Full FT SFT")
     parser.add_argument("--data_path", type=str, default="/root/data/sft_data")
     parser.add_argument(
-        "--model_name", type=str, default="LiquidAI/LFM2-8B-A1B"
+        "--model_name", type=str, default="unsloth/LFM2-8B-A1B"
     )
     parser.add_argument("--output_dir", type=str, default="/root/outputs/sft")
     parser.add_argument("--max_seq_length", type=int, default=8192)
