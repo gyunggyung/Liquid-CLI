@@ -69,3 +69,4 @@ venv.bak/
 output/
 outputs/
 *.log
+오류.txt
