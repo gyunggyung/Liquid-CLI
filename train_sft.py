@@ -149,7 +149,7 @@ def main(args):
 
     training_args = SFTConfig(
         max_length=args.max_seq_length,
-        dataset_text_field=None,
+        dataset_text_field="text",
         packing=False,
         dataset_kwargs={
             "add_special_tokens": False,
@@ -182,10 +182,9 @@ def main(args):
 
     trainer = SFTTrainer(
         model=model,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
         train_dataset=dataset,
         args=training_args,
-        max_seq_length=args.max_seq_length,
     )
 
     # 학습 재개
@@ -232,7 +231,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="LFM2-8B-A1B Full FT SFT")
     parser.add_argument("--data_path", type=str, default="/root/data/sft_data")
     parser.add_argument(
-        "--model_name", type=str, default="unsloth/LFM2-8B-A1B"
+        "--model_name", type=str, default="LiquidAI/LFM2-8B-A1B"
     )
     parser.add_argument("--output_dir", type=str, default="/root/outputs/sft")
     parser.add_argument("--max_seq_length", type=int, default=8192)
