@@ -1,0 +1,19 @@
+[project]
+name = "liquid-cli"
+version = "0.1.0"
+description = "Terminal Agent CLI for Liquid AI LFM2 models"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "huggingface-hub>=0.20.0",
+    "llama-cpp-python==0.3.19",
+    "prompt-toolkit>=3.0.0",
+    "rich>=13.0.0",
+    "typer>=0.9.0",
+]
+
+[tool.uv]
+package = true
+
+[project.scripts]
+liquid = "liquid_cli.main:app"
