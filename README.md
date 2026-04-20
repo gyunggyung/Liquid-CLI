@@ -13,6 +13,17 @@ NVIDIA의 [Nemotron-Terminal-Corpus](https://huggingface.co/datasets/nvidia/Nemo
 - **비코딩 집중**: 파일 관리, 데이터 처리, 보안, 패키지 관리 등 일상적 터미널 작업에 특화
 - **GDPO**: 다중 리워드 강화학습으로 JSON 포맷 + 명령어 품질을 동시 최적화
 
+## 🛠️ Liquid-CLI 사용 방법
+
+학습된 모델을 활용해 터미널에서 에이전트를 바로 실행할 수 있는 CLI 도구입니다. 자세한 내용은 [liquid-cli/README.md](liquid-cli/README.md)를 참고하세요.
+
+### 🚀 빠른 시작 (Quick Start)
+```bash
+git clone https://github.com/gyunggyung/Liquid-CLI.git
+cd liquid-cli
+uv run liquid ask "Check current CPU and Memory usage"
+```
+
 ## 🚀 실행 방법
 
 ### 1. Vessl AI 워크스페이스 생성
@@ -121,6 +132,17 @@ Train on NVIDIA's [Nemotron-Terminal-Corpus](https://huggingface.co/datasets/nvi
 - **LFM2-8B-A1B**: LNN (Liquid Neural Network) — gated short conv + GQA hybrid. 8B params but only 1B active → fast on CPU
 - **Non-coding focus**: File ops, data processing, security, package management
 - **GDPO**: Multi-reward RL optimizing JSON format + command quality simultaneously
+
+## 🛠️ How to use Liquid-CLI
+
+A CLI tool that allows you to run the agent directly in your terminal using the trained model. For more details, refer to [liquid-cli/README.md](liquid-cli/README.md).
+
+### 🚀 Quick Start
+```bash
+git clone https://github.com/gyunggyung/Liquid-CLI.git
+cd liquid-cli
+uv run liquid ask "Check current CPU and Memory usage"
+```
 
 ## 🚀 Quick Start
 
