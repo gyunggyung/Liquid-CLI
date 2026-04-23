@@ -33,7 +33,7 @@ uv run liquid ask "영어 지시어 입력 (예: Check current directory)"
    ```
 2. **데이터 검색 및 필터링**
    ```bash
-   uv run liquid ask "Find all .log files and extract lines containing 'ERROR'"
+   uv run liquid ask "Find all .json files and extract lines containing '5e8' from them."
    ```
 3. **시스템 리소스 확인**
    ```bash

@@ -4,8 +4,8 @@ from rich.console import Console
 
 console = Console()
 
-DEFAULT_REPO = "mradermacher/LFM2-8B-Terminal-SFT-Unsloth-GGUF"
-DEFAULT_FILE = "LFM2-8B-Terminal-SFT-Unsloth.Q4_K_M.gguf"
+DEFAULT_REPO = "gyung/LFM2-8B-Terminal-SFT-Unsloth-GGUF"
+DEFAULT_FILE = "LFM2-8B-Terminal-SFT-Unsloth-Q4_K_M.gguf"
 
 class ModelManager:
     def __init__(self, repo_id=DEFAULT_REPO, filename=DEFAULT_FILE):
