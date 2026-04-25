@@ -1,0 +1,7 @@
+{
+  "timestamp": "2023-10-25T10:05:00Z",
+  "level": "ERROR",
+  "message": "Failed to connect to database",
+  "code": 500,
+  "retry_count": 3
+}
